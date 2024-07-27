@@ -2,8 +2,11 @@ version: "3.9"
 
 services:
   app:
+    container_name: app
+    image: app
     build:
       context: .
+      dockerfile: Dockerfile
     command: >
       sh -c "python manage.py migrate &&
              python manage.py runserver 0.0.0.0:8000"
@@ -16,6 +19,7 @@ services:
       - db
 
   db:
+    container_name: db
     image: postgres:15.4
     ports:
       - "5432:5432"

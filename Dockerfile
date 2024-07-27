@@ -6,14 +6,8 @@ COPY ./scripts /scripts
 COPY ./src /src
 
 WORKDIR src
-
 EXPOSE 8000
-
 RUN /py/bin/pip install -r /requirements/development.txt
-
-# RUN apk add  geos gdal
-
-
 RUN chmod -R +x /scripts && \
     mkdir -p /vol/web/static && \
     mkdir -p /vol/web/media && \
@@ -21,9 +15,6 @@ RUN chmod -R +x /scripts && \
     chown -R djshop:djshop /vol && \
     chmod -R 755 /vol
 
-
 ENV PATH="/scripts:/py/bin:$PATH"
-
 USER djshop
-
 CMD ["run.sh"]

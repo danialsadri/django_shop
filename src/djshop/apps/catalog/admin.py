@@ -2,17 +2,22 @@ from django.contrib import admin
 from django.db.models import Count
 from treebeard.admin import TreeAdmin
 from treebeard.forms import movenodeform_factory
-
-from djshop.apps.catalog.models import Category, ProductClass, Option, ProductAttribute, ProductRecommendation, Product, \
+from djshop.apps.catalog.models import (
+    Category, ProductClass, Option, ProductAttribute, ProductRecommendation, Product,
     ProductAttributeValue, ProductImage
+)
 
 
-# Register your models here.
 class CategoryAdmin(TreeAdmin):
     form = movenodeform_factory(Category)
 
 
-admin.site.register(Option)
+admin.site.register(Category, CategoryAdmin)
+
+
+@admin.register(Option)
+class OptionAdmin(admin.ModelAdmin):
+    pass
 
 
 class ProductAttributeInline(admin.StackedInline):
@@ -67,14 +72,14 @@ class ProductAttributeValueInline(admin.TabularInline):
     model = ProductAttributeValue
     extra = 2
 
+
 class ProductImageInline(admin.TabularInline):
     model = ProductImage
     extra = 2
+
+
 @admin.register(Product)
 class ProductAdmin(admin.ModelAdmin):
     list_display = ('title', 'slug',)
-    inlines = [ProductAttributeValueInline,ProductImageInline, ProductRecommendationInline]
+    inlines = [ProductAttributeValueInline, ProductImageInline, ProductRecommendationInline]
     prepopulated_fields = {"slug": ("title",)}
-
-
-admin.site.register(Category, CategoryAdmin)
