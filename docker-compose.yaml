@@ -1,34 +1,38 @@
 version: "3.9"
 
 services:
-  app:
-    container_name: app
-    image: app
+  backend:
+    container_name: backend
+    image: backend
     build:
       context: .
       dockerfile: Dockerfile
     command: >
-      sh -c "python manage.py migrate &&
-             python manage.py runserver 0.0.0.0:8000"
+      sh -c "python manage.py makemigrations &&
+      python manage.py migrate &&
+      python manage.py collectstatic --no-input &&
+      python manage.py runserver 0.0.0.0:8000"
+    volumes:
+      - ./:/app
     ports:
       - "8000:8000"
-    volumes:
-      - ./src:/src
-      - ./data/web:/vol/web
     depends_on:
-      - db
+      - database
+    restart: always
 
-  db:
-    container_name: db
-    image: postgres:15.4
+  database:
+    container_name: database
+    image: postgres:16.0
     ports:
       - "5432:5432"
     volumes:
-      - djshop-data:/var/lib/postgresql/data
+      - database:/var/lib/postgresql/data
     environment:
       - POSTGRES_DB=djshop
       - POSTGRES_USER=djshop
       - POSTGRES_PASSWORD=123@456
+    restart: always
 
 volumes:
-  djshop-data:
+  database:
+    name: database
