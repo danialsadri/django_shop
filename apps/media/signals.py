@@ -1,6 +1,6 @@
 from django.db.models.signals import pre_save
 from django.dispatch import receiver
-from apps.media.exceptions import DuplicateImageException
+from apps.utils.exceptions import DuplicateImageException
 from .models import Image
 
 
