@@ -9,6 +9,7 @@ ALLOWED_HOSTS = ['localhost', '127.0.0.1']
 LOCAL_APPS = [
     'apps.analytics.apps.AnalyticsConfig',
     'apps.catalog.apps.CatalogConfig',
+    'apps.core.apps.CoreConfig',
     'apps.inventory.apps.InventoryConfig',
     'apps.media.apps.MediaConfig',
     'apps.users.apps.UsersConfig',
