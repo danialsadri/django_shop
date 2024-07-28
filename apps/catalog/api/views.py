@@ -1,10 +1,16 @@
 from rest_framework import viewsets
 from rest_framework.exceptions import NotAcceptable
 from apps.catalog.models import Category
-from apps.catalog.serializers.admin import (
+from .serializers import (
     CreateCategoryNodeSerializer, CategoryTreeSerializer,
-    CategoryNodeSerializer, CategoryModificationSerializer
+    CategoryNodeSerializer, CategoryModificationSerializer,
+    CategoryFrontSerializer,
 )
+
+
+class CategoryFrontViewSet(viewsets.ReadOnlyModelViewSet):
+    queryset = Category.objects.public()
+    serializer_class = CategoryFrontSerializer
 
 
 class CategoryViewSet(viewsets.ModelViewSet):

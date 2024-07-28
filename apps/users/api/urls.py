@@ -1,9 +1,9 @@
 from django.urls import path
 from rest_framework.routers import SimpleRouter
-from apps.users.views.admin import AdminLoginView
+from .views import AdminLoginView
 
 router = SimpleRouter()
-app_name = "users-admin"
+app_name = 'users'
 urlpatterns = [
     path('login/', AdminLoginView.as_view())
 ]

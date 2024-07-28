@@ -1,8 +1,9 @@
 from rest_framework.routers import SimpleRouter
-from apps.catalog.views.admin import CategoryViewSet
+from .views import CategoryViewSet, CategoryFrontViewSet
 
 router = SimpleRouter()
 router.register('categories', CategoryViewSet, basename='Category')
-app_name = 'catalog-admin'
+router.register('categories-front', CategoryFrontViewSet)
+app_name = 'catalog'
 urlpatterns = []
 urlpatterns += router.urls
