@@ -6,12 +6,12 @@ from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView
 
 admin_urls = [
     path('api/admin/users/', include('apps.users.urls.admin', namespace='users-admin')),
-    path('api/admin/catalog/', include('apps.catalog.urls.admin', namespace='catalog-admin'))
+    path('api/admin/catalog/', include('apps.catalog.urls.admin', namespace='catalog-admin')),
 ]
 
 front_urls = [
     path('api/front/users/', include('apps.users.urls.front', namespace='users-front')),
-    path('api/front/catalog/', include('apps.catalog.urls.front', namespace='catalog-front'))
+    path('api/front/catalog/', include('apps.catalog.urls.front', namespace='catalog-front')),
 ]
 
 doc_patterns = [
