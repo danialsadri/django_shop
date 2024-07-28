@@ -22,11 +22,11 @@ THIRD_PARTY_APPS = [
     'corsheaders',
     'treebeard',
     'channels',
-    'daphne',
     'drf_spectacular',
 ]
 
 INSTALLED_APPS = [
+    "daphne",
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",

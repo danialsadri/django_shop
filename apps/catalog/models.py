@@ -45,7 +45,7 @@ class OptionGroupValue(models.Model):
 
 
 class ProductClass(models.Model):
-    options = models.ManyToManyField('Option', blank=True, null=True)
+    options = models.ManyToManyField('Option', blank=True)
     title = models.CharField(max_length=200)
     slug = models.SlugField(max_length=200, unique=True, allow_unicode=True)
     description = models.CharField(max_length=2000, blank=True, null=True)
@@ -115,7 +115,7 @@ class Product(AuditableModel):
 
     product_class = models.ForeignKey(ProductClass, on_delete=models.PROTECT, blank=True, null=True, related_name='products')
     attributes = models.ManyToManyField(ProductAttribute, through='ProductAttributeValue')
-    recommended_products = models.ManyToManyField('catalog.Product', blank=True, null=True, through='ProductRecommendation')
+    recommended_products = models.ManyToManyField('catalog.Product', blank=True, through='ProductRecommendation')
     categories = models.ManyToManyField(Category, related_name='categories')
     parent = models.ForeignKey("self", on_delete=models.CASCADE, blank=True, null=True, related_name="children")
     structure = models.CharField(max_length=20, choices=ProductTypeChoice.choices, default=ProductTypeChoice.standalone)
@@ -145,7 +145,7 @@ class ProductAttributeValue(models.Model):
     value_integer = models.IntegerField(blank=True, null=True)
     value_float = models.FloatField(blank=True, null=True)
     value_option = models.ForeignKey(OptionGroupValue, on_delete=models.PROTECT, blank=True, null=True)
-    value_multi_option = models.ManyToManyField(OptionGroupValue, blank=True, null=True, related_name='multi_valued_attribute_value')
+    value_multi_option = models.ManyToManyField(OptionGroupValue, blank=True, related_name='multi_valued_attribute_value')
 
     class Meta:
         verbose_name = "Attribute Value"
