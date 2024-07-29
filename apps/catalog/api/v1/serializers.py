@@ -4,7 +4,24 @@ from rest_framework.generics import get_object_or_404
 from apps.catalog.models import Category
 
 
-class CreateCategoryNodeSerializer(serializers.ModelSerializer):
+class CategoryRetrieveSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Category
+        fields = '__all__'
+
+
+class CategoryListSerializer(serializers.ModelSerializer):
+    children = serializers.SerializerMethodField()
+
+    def get_children(self, obj):
+        return CategoryTreeSerializer(obj.get_children(), many=True).data
+
+    class Meta:
+        model = Category
+        fields = ['id', 'title', 'slug', 'description', 'is_public', 'children']
+
+
+class CategoryCreateSerializer(serializers.ModelSerializer):
     parent = serializers.IntegerField(required=False)
 
     def create(self, validated_data):
@@ -18,30 +35,13 @@ class CreateCategoryNodeSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Category
-        fields = ['id', 'title', 'description', 'is_public', 'slug', 'parent']
+        fields = ['id', 'title', 'slug', 'description', 'is_public', 'parent']
 
 
-class CategoryTreeSerializer(serializers.ModelSerializer):
-    children = serializers.SerializerMethodField()
-
-    def get_children(self, obj):
-        return CategoryTreeSerializer(obj.get_children(), many=True).data
-
-    class Meta:
-        model = Category
-        fields = ['id', 'title', 'description', 'is_public', 'slug', 'children']
-
-
-CategoryTreeSerializer.get_children = extend_schema_field(serializers.ListField(child=CategoryTreeSerializer()))(CategoryTreeSerializer.get_children)
-
-
-class CategoryNodeSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Category
-        fields = '__all__'
-
-
-class CategoryModificationSerializer(serializers.ModelSerializer):
+class CategoryUpdateSerializer(serializers.ModelSerializer):
     class Meta:
         model = Category
         fields = ['id', 'title', 'description', 'is_public']
+
+
+CategoryListSerializer.get_children = extend_schema_field(serializers.ListField(child=CategoryListSerializer()))(CategoryListSerializer.get_children)
