@@ -56,12 +56,6 @@ class ProductClassAdmin(admin.ModelAdmin):
         queryset.update(track_stock=True)
 
 
-class ProductRecommendationInline(admin.StackedInline):
-    model = ProductRecommendation
-    extra = 0
-    fk_name = 'primary'
-
-
 class ProductCategoryInline(admin.StackedInline):
     model = Product.categories.through
     extra = 0
@@ -75,6 +69,12 @@ class ProductAttributeValueInline(admin.TabularInline):
 class ProductImageInline(admin.TabularInline):
     model = ProductImage
     extra = 0
+
+
+class ProductRecommendationInline(admin.StackedInline):
+    model = ProductRecommendation
+    extra = 0
+    fk_name = 'primary'
 
 
 @admin.register(Product)
