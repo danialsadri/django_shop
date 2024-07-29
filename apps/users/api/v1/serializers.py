@@ -3,7 +3,7 @@ from rest_framework import serializers
 from rest_framework.authtoken.serializers import AuthTokenSerializer
 
 
-class AdminLoginSerializer(AuthTokenSerializer):
+class LoginSerializer(AuthTokenSerializer):
     def validate(self, attrs):
         username = attrs.get('username')
         password = attrs.get('password')

@@ -1,6 +1,6 @@
 from rest_framework.authtoken.views import ObtainAuthToken
-from .serializers import AdminLoginSerializer
+from .serializers import LoginSerializer
 
 
-class AdminLoginView(ObtainAuthToken):
-    serializer_class = AdminLoginSerializer
+class LoginView(ObtainAuthToken):
+    serializer_class = LoginSerializer
