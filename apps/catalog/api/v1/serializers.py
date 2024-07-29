@@ -14,7 +14,7 @@ class CategoryListSerializer(serializers.ModelSerializer):
     children = serializers.SerializerMethodField()
 
     def get_children(self, obj):
-        return CategoryTreeSerializer(obj.get_children(), many=True).data
+        return CategoryListSerializer(obj.get_children(), many=True).data
 
     class Meta:
         model = Category
