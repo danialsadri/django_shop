@@ -41,7 +41,7 @@ class CategoryCreateSerializer(serializers.ModelSerializer):
 class CategoryUpdateSerializer(serializers.ModelSerializer):
     class Meta:
         model = Category
-        fields = ['id', 'title', 'description', 'is_public']
+        fields = ['id', 'title', 'slug', 'description', 'is_public']
 
 
 CategoryListSerializer.get_children = extend_schema_field(serializers.ListField(child=CategoryListSerializer()))(CategoryListSerializer.get_children)
