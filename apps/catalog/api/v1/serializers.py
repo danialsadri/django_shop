@@ -4,12 +4,6 @@ from rest_framework.generics import get_object_or_404
 from apps.catalog.models import Category
 
 
-class CategoryFrontSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Category
-        fields = '__all__'
-
-
 class CreateCategoryNodeSerializer(serializers.ModelSerializer):
     parent = serializers.IntegerField(required=False)
 

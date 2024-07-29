@@ -4,13 +4,7 @@ from apps.catalog.models import Category
 from .serializers import (
     CreateCategoryNodeSerializer, CategoryTreeSerializer,
     CategoryNodeSerializer, CategoryModificationSerializer,
-    CategoryFrontSerializer,
 )
-
-
-class CategoryFrontViewSet(viewsets.ReadOnlyModelViewSet):
-    queryset = Category.objects.public()
-    serializer_class = CategoryFrontSerializer
 
 
 class CategoryViewSet(viewsets.ModelViewSet):
