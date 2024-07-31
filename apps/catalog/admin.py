@@ -5,23 +5,49 @@ from treebeard.forms import movenodeform_factory
 from apps.catalog.models import (
     Category, ProductClass, Option, ProductAttribute,
     ProductRecommendation, Product, ProductAttributeValue,
-    ProductImage
+    ProductImage, OptionGroup, OptionGroupValue
 )
 
 
+# ======================================================================
 @admin.register(Category)
 class CategoryAdmin(TreeAdmin):
     form = movenodeform_factory(Category)
+    list_display = ['title', 'slug', 'description', 'is_public', 'depth', 'numchild']
+    list_filter = ['is_public']
+    search_fields = ['title']
 
 
-@admin.register(Option)
-class OptionAdmin(admin.ModelAdmin):
-    pass
+class OptionGroupValueInline(admin.StackedInline):
+    model = OptionGroupValue
+    extra = 0
+    classes = ['collapse']
+    show_change_link = True
+
+
+@admin.register(OptionGroup)
+class OptionGroupAdmin(admin.ModelAdmin):
+    list_display = ['title']
+    search_fields = ['title']
+    inlines = [OptionGroupValueInline]
+
+
+@admin.register(OptionGroupValue)
+class OptionGroupValueAdmin(admin.ModelAdmin):
+    list_display = ['title', 'group']
+    search_fields = ['title']
+    raw_id_fields = ['group']
+
+
+# ======================================================================
 
 
 class ProductAttributeInline(admin.StackedInline):
     model = ProductAttribute
     extra = 0
+    classes = ['collapse']
+    show_change_link = True
+    raw_id_fields = ['option_group']
 
 
 class AttributeCountFilter(admin.SimpleListFilter):
@@ -43,11 +69,11 @@ class AttributeCountFilter(admin.SimpleListFilter):
 
 @admin.register(ProductClass)
 class ProductClassAdmin(admin.ModelAdmin):
-    list_display = ['title', 'slug', 'require_shipping', 'track_stock', 'attribute_count']
-    list_filter = ['require_shipping', 'track_stock', AttributeCountFilter]
+    list_display = ['title', 'slug', 'track_stock', 'require_shipping', 'attribute_count']
+    list_filter = ['track_stock', 'require_shipping', AttributeCountFilter]
+    search_fields = ['title']
     inlines = [ProductAttributeInline]
     actions = ['enable_track_stock']
-    prepopulated_fields = {"slug": ["title"]}
 
     def attribute_count(self, obj):
         return obj.attributes.count()
@@ -56,29 +82,73 @@ class ProductClassAdmin(admin.ModelAdmin):
         queryset.update(track_stock=True)
 
 
-class ProductCategoryInline(admin.StackedInline):
-    model = Product.categories.through
-    extra = 0
+@admin.register(ProductAttribute)
+class ProductAttributeAdmin(admin.ModelAdmin):
+    list_display = ['product_class', 'option_group', 'title', 'type', 'required']
+    list_filter = ['required']
+    search_fields = ['title']
+    raw_id_fields = ['product_class', 'option_group']
 
 
-class ProductAttributeValueInline(admin.TabularInline):
+# ======================================================================
+
+
+@admin.register(Option)
+class OptionAdmin(admin.ModelAdmin):
+    list_display = ['option_group', 'title', 'type', 'required']
+    list_filter = ['required']
+    search_fields = ['title']
+    raw_id_fields = ['option_group']
+
+
+class ProductAttributeValueInline(admin.StackedInline):
     model = ProductAttributeValue
     extra = 0
-
-
-class ProductImageInline(admin.TabularInline):
-    model = ProductImage
-    extra = 0
+    classes = ['collapse']
+    show_change_link = True
+    raw_id_fields = ['attribute', 'value_option', 'value_multi_option']
 
 
 class ProductRecommendationInline(admin.StackedInline):
     model = ProductRecommendation
     extra = 0
     fk_name = 'primary'
+    classes = ['collapse']
+    show_change_link = True
+    raw_id_fields = ['primary', 'recommendation']
+
+
+class ProductImageInline(admin.StackedInline):
+    model = ProductImage
+    extra = 0
+    classes = ['collapse']
+    show_change_link = True
+    raw_id_fields = ['image']
 
 
 @admin.register(Product)
 class ProductAdmin(admin.ModelAdmin):
-    list_display = ['title', 'slug']
-    prepopulated_fields = {"slug": ["title"]}
-    inlines = [ProductAttributeValueInline, ProductImageInline, ProductRecommendationInline]
+    list_display = ['product_class', 'parent', 'structure', 'title', 'is_public']
+    list_filter = ['is_public']
+    search_fields = ['title']
+    raw_id_fields = ['product_class', 'parent']
+    inlines = [ProductAttributeValueInline, ProductRecommendationInline, ProductImageInline]
+
+
+@admin.register(ProductAttributeValue)
+class ProductAttributeValueAdmin(admin.ModelAdmin):
+    list_display = ['product', 'attribute']
+    raw_id_fields = ['product', 'attribute', 'value_option', 'value_multi_option']
+
+
+@admin.register(ProductRecommendation)
+class ProductRecommendationAdmin(admin.ModelAdmin):
+    list_display = ['primary', 'recommendation', 'rank']
+    raw_id_fields = ['primary', 'recommendation']
+
+
+@admin.register(ProductImage)
+class ProductImageAdmin(admin.ModelAdmin):
+    list_display = ['product', 'image', 'display_order']
+    raw_id_fields = ['product', 'image']
+# ======================================================================
